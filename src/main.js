@@ -1,18 +1,11 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
 import App from './App';
-import goods from 'components/goods/goods';
+import router from './router';
 
-Vue.use(VueRouter);
-
-let app = Vue.extend(App);
-
-let router = new VueRouter();
-
-router.map({
-  '/goods': {
-    component: goods
-  }
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  template: '<App/>',
+  router,
+  components: { App }
 });
-
-router.start(app, '#app');
