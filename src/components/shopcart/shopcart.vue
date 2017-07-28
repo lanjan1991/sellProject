@@ -7,7 +7,7 @@
             <i class="icon-shopping_cart"></i>
           </div>
         </div>
-        <div class="price">0元</div>
+        <div class="price">￥{{totalPrice}}</div>
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
       <div class="content-right">
@@ -22,19 +22,33 @@
 <script>
 export default {
   props: {
-    selectFoods: {
+    selectFoods: { // 选择的商品以及数量，用于购物车结算
       type: Array,
       default() {
-        return [];
+        return [
+          {
+            price: 10,
+            count: 1
+          }
+        ];
       }
     },
-    deliveryPrice: {
+    deliveryPrice: { // 配送费
       type: Number,
       default: 0
     },
-    minPrice: {
+    minPrice: { // 最低起送金额
       type: Number,
       default: 0
+    }
+  },
+  computed: {
+    totalPrice() { // 计算总价
+      let total = 0;
+      this.selectFoods.forEach((food) => {
+        total += food.price * food.count;
+      });
+      return total;
     }
   }
 };
