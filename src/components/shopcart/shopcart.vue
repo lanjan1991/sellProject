@@ -12,8 +12,8 @@
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
       <div class="content-right">
-        <div class="pay">
-          ￥{{minPrice}}元起送
+        <div class="pay" :class="payClass">
+          {{PayDesc}}
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@
 <script>
 export default {
   props: {
-    selectFoods: { // 选择的商品以及数量，用于购物车结算
+    selectFoods: { // 选择的商品以及数量，用于购物车结算。所有展示都依赖这个数据。
       type: Array,
       default() {
         return [
@@ -44,19 +44,36 @@ export default {
     }
   },
   computed: {
-    totalPrice() { // 计算总价
+    totalPrice() { // 计算所选商品总价
       let total = 0;
       this.selectFoods.forEach((food) => {
         total += food.price * food.count;
       });
       return total;
     },
-    totalCount() { // 所选商品所有总和
+    totalCount() { // 所选商品总数量
       let count = 0;
       this.selectFoods.forEach((food) => {
         count += food.count;
       });
       return count;
+    },
+    PayDesc() { // 支付描述
+      if (this.totalPrice === 0) {
+        return `￥${this.minPrice}元起送`;
+      } else if (this.totalPrice < this.minPrice) {
+        let diff = this.minPrice - this.totalPrice;
+        return `还差￥${diff}元起送`;
+      } else {
+        return '去结算';
+      }
+    },
+    payClass() { // 是否可以支付样式
+      if (this.totalPrice < this.minPrice) {
+        return 'not-enough';
+      } else {
+        return 'enough';
+      }
     }
   }
 };
@@ -137,14 +154,18 @@ export default {
           line-height: 24px
           font-size: 10px
       .content-right
-        flex: 0 0 80px
-        width: 80px
+        flex: 0 0 90px
+        width: 90px
         .pay
           height: 48px
           line-height: 48px
           text-align: center
           font-size: 12px
-          font-weight: 700
-          background: #2b333b
+          font-weight: 700     
+          &.not-enough
+            background: #2b333b
+          &.enough
+            background: #00b43c
+            color: #fff
 </style>
 
