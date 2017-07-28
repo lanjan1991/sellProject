@@ -11,7 +11,7 @@
         <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
-      <div class="content-right">
+      <div class="content-right" @click.stop.prevent="pay">
         <div class="pay" :class="payClass">
           {{PayDesc}}
         </div>
@@ -20,7 +20,7 @@
     <div class="shopcart-list" v-show="listShow">
       <div class="list-header">
         <h1 class="title">购物车</h1>
-        <span class="empty">清空</span>
+        <span class="empty" @click="empty">清空</span>
       </div>
       <div class="list-content" ref="listContent">
         <ul>
@@ -36,6 +36,7 @@
         </ul>
       </div>
     </div>
+    <div class="list-mark" @click="hideList" v-show="listShow"></div>
   </div>
 </template>
 
@@ -126,11 +127,25 @@ export default {
     cartcontrol
   },
   methods: {
-    toggleList() {
+    toggleList() { // 展示或关闭购物车详情页面
       if (!this.totalCount) {
         return;
       }
       this.fold = !this.fold;
+    },
+    hideList() { // 隐藏购物车详情页
+      this.fold = true;
+    },
+    empty() { // 购物车详情清空
+      this.selectFoods.forEach((food) => {
+        food.count = 0;
+      });
+    },
+    pay() { // 去结算
+      if (this.totalPrice < this.minPrice) {
+        return;
+      }
+      window.alert(`支付${this.totalPrice}元`);
     }
   }
 };
@@ -272,5 +287,15 @@ export default {
             position: absolute
             right: 0
             bottom: 6px
+
+  .list-mark
+    position: fixed
+    top: 0
+    width: 100%
+    height: 100%
+    z-index: -20
+    opacity: 1
+    background: rgba(7, 17, 27, 0.6)
+    -webkit-filter: blur(10px)
 </style>
 
