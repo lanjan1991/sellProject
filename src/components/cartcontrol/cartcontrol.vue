@@ -17,7 +17,6 @@ export default {
   },
   methods: {
     addCart() {
-      console.info('click:' + this.food.count);
       if (!this.food.count) {
         Vue.set(this.food, 'count', 1); // 注意：需要这样写，this.food.count才能数据双向绑定成功
       } else {
